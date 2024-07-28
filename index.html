@@ -128,13 +128,28 @@
         .postponed-live::before {
             background-color: orange;
         }
+        .menu-phrase-cell{
+                display: none;
+        }
+        @media (max-width: 600px) {
+            .badge-container{
+                overflow: scroll;
+            }
+            .menu-phrase{
+                display: none;
+            }
+            .menu-phrase-cell{
+                display: block;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="top-menu">
         <img src="https://upload.wikimedia.org/wikipedia/pt/thumb/d/d1/2024_Summer_Olympics_logo.svg/250px-2024_Summer_Olympics_logo.svg.png" alt="Símbolo das Olimpíadas de Paris 2024">
         <div class="menu-items">
-            <p>Acompanhe o Brasil nas Olimpíadas Paris 2024</p>
+            <p class="menu-phrase">Acompanhe o Brasil nas Olimpíadas Paris 2024</p>
+            <p class="menu-phrase-cell">Paris 2024 - Brasil</p>
         </div>
         <img src="https://upload.wikimedia.org/wikipedia/commons/3/34/Brasil_Olympic_Committee_crest.svg" alt="Símbolo do Time Brasil">
     </div>
