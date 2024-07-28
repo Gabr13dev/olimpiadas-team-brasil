@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paris 2024 - Time Brasil</title>
+    <style>
+        body {
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+            color: #333;
+            margin: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .card-confirmed{
+            border-left: 5px solid #009C3B; /* Verde */
+        }
+        .card-live{
+            border-left: 8px solid #9c1700; /* Verde */
+        }
+        .card-postponed{
+            border-left: 5px solid orange
+        }
+        .card h2 {
+            margin: 0;
+            font-size: 24px;
+            color: #FFCC29; /* Amarelo */
+        }
+        .card p {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        .card img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 15px;
+        }
+        .date-time {
+            color: #002776; /* Azul */
+            font-weight: bold;
+        }
+        .badge-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .badge {
+            background-color: #009C3B;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            border: solid 0.1rem #FFCC29;
+        }
+        .badge:hover {
+            background-color: #007a2b;
+        }
+        .badge-active{
+            background-color: #1c3b27;
+            color: #009C3B;
+        }
+        .badge-active:hover {
+            background-color: #1c3b27;
+            color: #009C3B;
+        }
+        .top-menu {
+            background-color: #009C3B; /* Verde Brasil */
+            color: #FFCC29; /* Amarelo Brasil */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+        }
+        .top-menu img {
+            height: 50px;
+        }
+        .top-menu .menu-items {
+            display: flex;
+            gap: 20px;
+        }
+        .top-menu .menu-items a {
+            color: #FFCC29;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .top-menu .menu-items a:hover {
+            color: #002776; /* Azul Brasil */
+        }
+        .badge-legend {
+            display: inline-flex;
+            align-items: center;
+            padding: 5px 10px;
+            margin: 5px;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            background-color: white;
+        }
+        .badge-legend::before {
+            content: '';
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .live-legend::before {
+            background-color: red;
+        }
+        .upcoming-legend::before {
+            background-color: green;
+        }
+        .postponed-live::before {
+            background-color: orange;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-menu">
+        <img src="https://upload.wikimedia.org/wikipedia/pt/thumb/d/d1/2024_Summer_Olympics_logo.svg/250px-2024_Summer_Olympics_logo.svg.png" alt="Símbolo das Olimpíadas de Paris 2024">
+        <div class="menu-items">
+            <p>Acompanhe o Brasil nas Olimpíadas Paris 2024</p>
+        </div>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/3/34/Brasil_Olympic_Committee_crest.svg" alt="Símbolo do Time Brasil">
+    </div>
+    <div class="container">
+        <div class="badge-container" id="badgeContainer"></div>
+        <div>
+            <span class="badge-legend live-legend">Ao Vivo</span> 
+            <span class="badge-legend upcoming-legend">Confirmado</span> 
+            <span class="badge-legend postponed-live">Adiado</span>
+        </div>
+        <div id="eventsContainer"></div>
+    </div>
+    <script>
+        // Função para criar badges de data
+        function createDateBadges() {
+            const badgeContainer = document.getElementById('badgeContainer');
+            const today = new Date();
+            for (let i = 0; i < 5; i++) {
+                const badgeDate = new Date(today);
+                badgeDate.setDate(today.getDate() + i);
+                const badge = document.createElement('div');
+                badge.className = `badge ` + (i == 0 ? 'badge-active' : '');
+                badge.id = `badge-${i}`;
+                badge.textContent = badgeDate.toLocaleDateString('pt-BR');
+                badge.dataset.date = badgeDate.toISOString().split('T')[0];
+                badge.addEventListener('click', () => fetchEvents(badge.dataset.date, i));
+                badgeContainer.appendChild(badge);
+            }
+        }
+
+        // Função para buscar eventos da API day/yyyy-mm-dd
+        async function fetchEvents(date, indexid) {
+            setActiveDate(indexid)
+            const url = `https://sph-s-api.olympics.com/summer/schedules/api/POR/schedule/day/` + date;
+            const response = await fetch(url);
+            const data = await response.json();
+            const brazilEvents = data.units.filter(event =>
+                event.competitors && event.status != 'FINISHED' && event.competitors.some(competitor => competitor.noc === 'BRA')
+            );
+            displayEvents(brazilEvents, date);
+        }
+
+        // Função para exibir eventos filtrados
+        function displayEvents(events, date) {
+            const eventsContainer = document.getElementById('eventsContainer');
+            eventsContainer.innerHTML = '';
+            //const filteredEvents = events.filter(event => event.startDate.startsWith(date));
+            events.forEach(event => {
+                const card = document.createElement('div');
+                card.className = `card ` + getTimingClass(event);
+                card.innerHTML = `
+                    <h2>${event.disciplineName} - ${event.eventName}</h2>
+                    <p class="date-time">Data e Hora: ${adjustDate(event.startDate)}</p>
+                    <p>Local: ${event.locationDescription}</p>
+                    <p>Status: ${event.statusDescription}</p>
+                    <p>${getAtleta(event)}</p>
+                `;
+                eventsContainer.appendChild(card);
+            });
+        }
+
+        function setActiveDate(indexid){
+            for (let i = 0; i < 5; i++) {
+                const badgeDateElem = document.getElementById('badge-' + i);
+                badgeDateElem.classList.remove("badge-active");
+            }
+            document.getElementById('badge-' + indexid).classList.add("badge-active");
+
+        }
+
+        function getTimingClass(event){
+            switch (event.statusDescription) {
+                case 'Programado':
+                    return 'card-confirmed';
+                    break;
+                case 'Adiado':
+                    return 'card-postponed';
+                    break;
+                case 'Em andamento':
+                    return 'card-live';
+                    break;
+                default:
+                    return 'card-confirmed';
+                    break;
+            }
+        }
+
+        // Função para obter o nome do atleta brasileiro
+        function getAtleta(event) {
+            const brazilianCompetitors = event.competitors.filter(comp => comp.noc === 'BRA');
+            const isTeamEvent = brazilianCompetitors.length > 1;
+
+            if (isTeamEvent) {
+                const competitorsNames = brazilianCompetitors.map(comp => comp.name).join('<br>');
+                return competitorsNames;
+            } else {
+                const opponent = event.competitors.find(comp => comp.noc !== 'BRA');
+                if (opponent) {
+                    return `${brazilianCompetitors[0].name} x ${opponent.name}`;
+                } else {
+                    return 'Desconhecido';
+                }
+            }
+        }
+
+        function adjustDate(date){
+            const eventStartDate = new Date(date);
+
+            const adjustedDate = new Date(eventStartDate.getTime());
+
+            const day = String(adjustedDate.getDate()).padStart(2, '0');
+            const month = String(adjustedDate.getMonth() + 1).padStart(2, '0'); // Month is zero-based
+            const year = adjustedDate.getFullYear();
+            const hours = String(adjustedDate.getHours()).padStart(2, '0');
+            const minutes = String(adjustedDate.getMinutes()).padStart(2, '0');
+    
+            return `${day}/${month}/${year} - ${hours}:${minutes}`;
+        }
+
+        // Cria os badges de data e carrega os eventos do primeiro dia
+        createDateBadges();
+        fetchEvents(new Date().toISOString().split('T')[0], 0);
+    </script>
+</body>
+</html>
