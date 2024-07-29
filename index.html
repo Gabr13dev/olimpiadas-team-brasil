@@ -197,6 +197,9 @@
           display: block;
         }
       }
+      .atleta b {
+            color: green;
+       }
     </style>
   </head>
   <body>
@@ -294,13 +297,13 @@
           const card = document.createElement("div");
           card.className = `card ` + getTimingClass(event);
           card.innerHTML = `
-                    <h2>${event.disciplineName} - ${event.eventName} - ${event.phaseName}</h2>
+                    <h2>${event.disciplineName} - ${event.phaseName}</h2>
                     <p class="date-time">Data e Hora: ${adjustDate(
                       event.startDate
                     )}</p>
                     <p>Local: ${event.locationDescription}</p>
                     <p>Status: ${event.statusDescription}</p>
-                    <p>${getAtleta(event)}</p>
+                    <p class="atleta">${getAtleta(event)}</p>
                 `;
           eventsContainer.appendChild(card);
         });
@@ -351,7 +354,7 @@
         } else {
           const opponent = event.competitors.find((comp) => comp.noc !== "BRA");
           if (opponent) {
-            return `${brazilianCompetitors[0].name} x ${opponent.name}`;
+            return `<b>${brazilianCompetitors[0].name}</b> x ${opponent.name}`;
           } else {
             return "Desconhecido";
           }
