@@ -146,6 +146,10 @@
       .menu-phrase-cell {
         display: none;
       }
+      .menu-phrase-footer{
+        display: block;
+        text-align: center;
+      }
       .news-section {
         color: #ffcc29; /* Amarelo Brasil */
         padding: 10px;
@@ -179,6 +183,12 @@
       .news-card a:hover {
         text-decoration: underline;
       }
+      .menu-phrase-footer a{
+          color: #002776 !important;
+      }
+      .menu-phrase-footer a:hover{
+          color: #f7fcd1 !important;
+      }
       @keyframes ticker {
         0% {
           transform: translateX(100%);
@@ -201,9 +211,10 @@
           width: 100%;
           display: flex;
         }
-      }
-      .atleta b {
-        color: green;
+        .menu-phrase-footer a{
+          width: 100%;
+          display: flex;
+        }
       }
       span.noc-atleta {
         border: solid 0.1rem;
@@ -213,6 +224,11 @@
         border: solid 0.1rem;
         padding: 0.3rem;
         border-radius: 12px;
+        padding-right: 20px;
+        padding-left: 20px;
+      }
+      .atleta b {
+        color: green;
       }
     </style>
   </head>
@@ -243,6 +259,19 @@
         <span class="badge-legend none-legend">Remarcado</span>
       </div>
       <div id="eventsContainer"></div>
+    </div>
+    <div class="top-menu">
+      <img
+        src="https://upload.wikimedia.org/wikipedia/pt/thumb/d/d1/2024_Summer_Olympics_logo.svg/250px-2024_Summer_Olympics_logo.svg.png"
+        alt="Símbolo das Olimpíadas de Paris 2024"
+      />
+      <div class="menu-items">
+        <p class="menu-phrase-footer">Desenvolvido por <a href="https://github.com/Gabr13dev/" target="_blank">Gabriel de Almeida</a></p>
+      </div>
+      <img
+        src="https://upload.wikimedia.org/wikipedia/commons/3/34/Brasil_Olympic_Committee_crest.svg"
+        alt="Símbolo do Time Brasil"
+      />
     </div>
     <script>
       // Função para criar badges de data
