@@ -189,7 +189,17 @@
             const brazilEvents = data.units.filter(event =>
                 event.competitors && event.status != 'FINISHED' && event.competitors.some(competitor => competitor.noc === 'BRA')
             );
-            displayEvents(brazilEvents, date);
+            const sortedEvents = brazilEvents.sort((a, b) => {
+                if (a.statusDescription === 'Em andamento' && b.statusDescription !== 'Em andamento') {
+                    return -1;
+                }
+                if (a.statusDescription !== 'Em andamento' && b.statusDescription === 'Em andamento') {
+                    return 1;
+                }
+                return 0;
+            });
+            
+            displayEvents(sortedEvents, date);
         }
 
         // Função para exibir eventos filtrados
