@@ -17,6 +17,7 @@
       }
       #eventsContainer {
         margin-top: 18px;
+        min-height: 100vh;
       }
       .container {
         max-width: 1200px;
@@ -230,6 +231,13 @@
       .atleta b {
         color: green;
       }
+      .no-data{
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 10px;
+        text-align: center;
+      }
     </style>
   </head>
   <body>
@@ -336,6 +344,7 @@
         const eventsContainer = document.getElementById("eventsContainer");
         eventsContainer.innerHTML = "";
         //const filteredEvents = events.filter(event => event.startDate.startsWith(date));
+        if(events.length > 0){
         events.forEach((event) => {
           const card = document.createElement("div");
           card.className = `card ` + getTimingClass(event);
@@ -346,8 +355,17 @@
                     <p class="score-live">${event.statusDescription == "Em andamento" ? getLiveScore(event) : event.statusDescription}</p>
                     <p class="atleta">${getAtleta(event)}</p>
                 `;
-          eventsContainer.appendChild(card);
-        });
+            eventsContainer.appendChild(card);
+          });
+        }else{
+          const card = document.createElement("div");
+          card.className = `no-data`;
+          card.innerHTML = `
+                    <h2>Dia Olimpíco finalizado</h2><br>
+                    <img width="100%" src="https://www.cnnbrasil.com.br/wp-content/uploads/sites/12/2024/07/GettyImages-2163817723-e1722017380437.jpg?w=1220&h=674&crop=1&quality=50" />
+                `;
+            eventsContainer.appendChild(card);
+        }
       }
 
       function setActiveDate(indexid) {
@@ -395,7 +413,6 @@
         } else {
           const opponent = event.competitors.find((comp) => comp.noc !== "BRA");
           if (opponent) {
-            console.log(opponent);
             return `<b>${brazilianCompetitors[0].name}</b> x ${opponent.name} <span class="noc-atleta">${opponent.noc}</span>`;
           } else {
             return "Desconhecido";
