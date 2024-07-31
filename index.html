@@ -147,7 +147,7 @@
       .menu-phrase-cell {
         display: none;
       }
-      .menu-phrase-footer{
+      .menu-phrase-footer {
         display: block;
         text-align: center;
       }
@@ -184,11 +184,11 @@
       .news-card a:hover {
         text-decoration: underline;
       }
-      .menu-phrase-footer a{
-          color: #002776 !important;
+      .menu-phrase-footer a {
+        color: #002776 !important;
       }
-      .menu-phrase-footer a:hover{
-          color: #f7fcd1 !important;
+      .menu-phrase-footer a:hover {
+        color: #f7fcd1 !important;
       }
       @keyframes ticker {
         0% {
@@ -208,11 +208,11 @@
         .menu-phrase-cell {
           display: block;
         }
-        .atleta b{
+        .atleta b {
           width: 100%;
           display: flex;
         }
-        .menu-phrase-footer a{
+        .menu-phrase-footer a {
           width: 100%;
           display: flex;
         }
@@ -221,7 +221,7 @@
         border: solid 0.1rem;
         padding: 0.1rem;
       }
-      .score-live{
+      .score-live {
         border: solid 0.1rem;
         padding: 0.3rem;
         border-radius: 12px;
@@ -231,7 +231,7 @@
       .atleta b {
         color: green;
       }
-      .no-data{
+      .no-data {
         background-color: #fff;
         border-radius: 8px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -274,7 +274,12 @@
         alt="Símbolo das Olimpíadas de Paris 2024"
       />
       <div class="menu-items">
-        <p class="menu-phrase-footer">Desenvolvido por <a href="https://github.com/Gabr13dev/" target="_blank">Gabriel de Almeida</a></p>
+        <p class="menu-phrase-footer">
+          Desenvolvido por
+          <a href="https://github.com/Gabr13dev/" target="_blank"
+            >Gabriel de Almeida</a
+          >
+        </p>
       </div>
       <img
         src="https://upload.wikimedia.org/wikipedia/commons/3/34/Brasil_Olympic_Committee_crest.svg"
@@ -344,27 +349,31 @@
         const eventsContainer = document.getElementById("eventsContainer");
         eventsContainer.innerHTML = "";
         //const filteredEvents = events.filter(event => event.startDate.startsWith(date));
-        if(events.length > 0){
-        events.forEach((event) => {
-          const card = document.createElement("div");
-          card.className = `card ` + getTimingClass(event);
-          card.innerHTML = `
+        if (events.length > 0) {
+          events.forEach((event) => {
+            const card = document.createElement("div");
+            card.className = `card ` + getTimingClass(event);
+            card.innerHTML = `
                     <h2>${event.disciplineName} - ${event.phaseName}</h2>
                     <p class="date-time">Data e Hora: ${adjustDate(event)}</p>
                     <p>Local: ${event.locationDescription}</p>
-                    <p class="score-live">${event.statusDescription == "Em andamento" ? getLiveScore(event) : event.statusDescription}</p>
+                    <p class="score-live">${
+                      event.statusDescription == "Em andamento"
+                        ? getLiveScore(event)
+                        : event.statusDescription
+                    }</p>
                     <p class="atleta">${getAtleta(event)}</p>
                 `;
             eventsContainer.appendChild(card);
           });
-        }else{
+        } else {
           const card = document.createElement("div");
           card.className = `no-data`;
           card.innerHTML = `
                     <h2>Dia Olimpíco finalizado</h2><br>
                     <img width="100%" src="https://www.cnnbrasil.com.br/wp-content/uploads/sites/12/2024/07/GettyImages-2163817723-e1722017380437.jpg?w=1220&h=674&crop=1&quality=50" />
                 `;
-            eventsContainer.appendChild(card);
+          eventsContainer.appendChild(card);
         }
       }
 
@@ -432,7 +441,10 @@
         const hours = String(adjustedDate.getHours()).padStart(2, "0");
         const minutes = String(adjustedDate.getMinutes()).padStart(2, "0");
 
-        const timing = event.statusDescription == "Em andamento" ? 'Agora' : `${hours}:${minutes}`;
+        const timing =
+          event.statusDescription == "Em andamento"
+            ? "Agora"
+            : `${hours}:${minutes}`;
 
         return `${day}/${month}/${year} - ${timing}`;
       }
@@ -474,25 +486,27 @@
           return "Sem informações de placar ao vivo";
         }
 
-        // Organizar os competidores mantendo os BR primeiro
+        // Organizar os competidores mantendo os BR primeiro e ordenar por pontuação
         const sortedCompetitors = event.competitors.sort((a, b) => {
           if (a.noc === "BRA" && b.noc !== "BRA") {
-            return -1;
-          } else if (a.noc !== "BRA" && b.noc === "BRA") {
-            return 1;
-          } else {
-            return 0;
+            // Ordenar por pontuação em ordem decrescente
+            const scoreA = parseFloat(a.results.mark) || 0;
+            const scoreB = parseFloat(b.results.mark) || 0;
+            return scoreB - scoreA;
           }
         });
 
         // Obter os detalhes do placar
         let scoreDetails = `PLACAR AO VIVO<br><br>`;
         sortedCompetitors.forEach((competitor) => {
-          const { name, results } = competitor;
+          const { name, results, noc } = competitor;
           const { mark } = results;
 
-          
-          scoreDetails += `${name}: ${mark == '' ? '0' : mark}<br>`;
+          if (noc === "BRA") {
+            scoreDetails += `<span style="color: green;">${name}: ${mark === "" ? "0" : mark}</span><br>`;
+          } else {
+            scoreDetails += `${name}: ${mark === "" ? "0" : mark}<br>`;
+          }
         });
 
         return scoreDetails.trim();
