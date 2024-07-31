@@ -488,12 +488,10 @@
 
         // Organizar os competidores mantendo os BR primeiro e ordenar por pontuação
         const sortedCompetitors = event.competitors.sort((a, b) => {
-          if (a.noc === "BRA" && b.noc !== "BRA") {
             // Ordenar por pontuação em ordem decrescente
             const scoreA = parseFloat(a.results.mark) || 0;
             const scoreB = parseFloat(b.results.mark) || 0;
             return scoreB - scoreA;
-          }
         });
 
         // Obter os detalhes do placar
