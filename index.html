@@ -47,6 +47,9 @@
       .card-none {
         border-left: 5px solid rgb(90, 90, 90);
       }
+      .card-cancel {
+        border-left: 5px solid rgb(161, 38, 38);
+      }
       .card h2 {
         margin: 0;
         font-size: 24px;
@@ -144,6 +147,9 @@
       .none-legend:before {
         background-color: rgb(90, 90, 90);
       }
+      .cancel-legend:before {
+        background-color: rgb(161, 38, 38);
+      }
       .menu-phrase-cell {
         display: none;
       }
@@ -238,6 +244,20 @@
         padding: 10px;
         text-align: center;
       }
+      .count-legend {
+        background-color: gray;
+        color: white;
+        padding: 0px;
+        border-radius: 50%;
+        display: inline-block;
+        text-align: center;
+        min-width: 20px;
+        min-height: 20px;
+        line-height: 20px;
+        font-size: 14px;
+        font-weight: bold;
+        margin-left: 3px;
+      }
     </style>
   </head>
   <body>
@@ -261,10 +281,24 @@
       </div>
       <div class="badge-container" id="badgeContainer"></div>
       <div>
-        <span class="badge-legend live-legend">Ao Vivo</span>
-        <span class="badge-legend upcoming-legend">Confirmado</span>
-        <span class="badge-legend postponed-live">Adiado</span>
-        <span class="badge-legend none-legend">Remarcado</span>
+        <span class="badge-legend live-legend"
+          >Ao Vivo <span class="count-legend" id="aovivocount">0</span></span
+        >
+        <span class="badge-legend upcoming-legend"
+          >Confirmado
+          <span class="count-legend" id="confirmadocount">0</span></span
+        >
+        <span class="badge-legend postponed-live"
+          >Adiado <span class="count-legend" id="adiadocount">0</span></span
+        >
+        <span class="badge-legend none-legend"
+          >Remarcado
+          <span class="count-legend" id="remarcadocount">0</span></span
+        >
+        <span class="badge-legend cancel-legend"
+          >Cancelado
+          <span class="count-legend" id="canceladocount">0</span></span
+        >
       </div>
       <div id="eventsContainer"></div>
     </div>
@@ -287,6 +321,12 @@
       />
     </div>
     <script>
+      var AoVivoCount = 0;
+      var ConfirmadoCount = 0;
+      var AdiadoCount = 0;
+      var RemarcadoCount = 0;
+      var CanceladoCount = 0;
+
       // Função para criar badges de data
       function createDateBadges() {
         const badgeContainer = document.getElementById("badgeContainer");
@@ -306,8 +346,17 @@
         }
       }
 
+      function clearCountLegends() {
+        AoVivoCount = 0;
+        ConfirmadoCount = 0;
+        AdiadoCount = 0;
+        RemarcadoCount = 0;
+        CanceladoCount = 0;
+      }
+
       // Função para buscar eventos da API day/yyyy-mm-dd
       async function fetchEvents(date, indexid) {
+        clearCountLegends();
         setActiveDate(indexid);
         const url =
           `https://sph-s-api.olympics.com/summer/schedules/api/POR/schedule/day/` +
@@ -321,6 +370,7 @@
           "Programado",
           "Remarcado",
           "Adiado",
+          "Cancelado",
         ];
 
         const brazilEvents = data.units.filter(
@@ -366,6 +416,12 @@
                 `;
             eventsContainer.appendChild(card);
           });
+          document.getElementById("aovivocount").innerHTML = AoVivoCount;
+          document.getElementById("confirmadocount").innerHTML =
+            ConfirmadoCount;
+          document.getElementById("adiadocount").innerHTML = AdiadoCount;
+          document.getElementById("remarcadocount").innerHTML = RemarcadoCount;
+          document.getElementById("canceladocount").innerHTML = CanceladoCount;
         } else {
           const card = document.createElement("div");
           card.className = `no-data`;
@@ -390,16 +446,24 @@
       function getTimingClass(event) {
         switch (event.statusDescription) {
           case "Programado":
+            ConfirmadoCount++;
             return "card-confirmed";
             break;
           case "Adiado":
+            AdiadoCount++;
             return "card-postponed";
             break;
           case "Em andamento":
+            AoVivoCount++;
             return "card-live";
             break;
           case "Remarcado":
+            RemarcadoCount++;
             return "card-none";
+            break;
+          case "Cancelado":
+            CanceladoCount++;
+            return "card-cancel";
             break;
           default:
             return "card-confirmed";
@@ -424,7 +488,7 @@
           if (opponent) {
             return `<b>${brazilianCompetitors[0].name}</b> x ${opponent.name} <span class="noc-atleta">${opponent.noc}</span>`;
           } else {
-            return "Desconhecido";
+            return "Ainda não definido";
           }
         }
       }
@@ -488,10 +552,10 @@
 
         // Organizar os competidores mantendo os BR primeiro e ordenar por pontuação
         const sortedCompetitors = event.competitors.sort((a, b) => {
-            // Ordenar por pontuação em ordem decrescente
-            const scoreA = parseFloat(a.results.mark) || 0;
-            const scoreB = parseFloat(b.results.mark) || 0;
-            return scoreB - scoreA;
+          // Ordenar por pontuação em ordem decrescente
+          const scoreA = parseFloat(a.results.mark) || 0;
+          const scoreB = parseFloat(b.results.mark) || 0;
+          return scoreB - scoreA;
         });
 
         // Obter os detalhes do placar
@@ -501,7 +565,9 @@
           const { mark } = results;
 
           if (noc === "BRA") {
-            scoreDetails += `<span style="color: green;">${name}: ${mark === "" ? "0" : mark}</span><br>`;
+            scoreDetails += `<span style="color: green;">${name}: ${
+              mark === "" ? "0" : mark
+            }</span><br>`;
           } else {
             scoreDetails += `${name}: ${mark === "" ? "0" : mark}<br>`;
           }
