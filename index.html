@@ -551,12 +551,16 @@
           return "Sem informações de placar ao vivo";
         }
 
+        if (!event.competitors[0].results) {
+          return "Sem informações de placar ao vivo";
+        }
+
         // Organizar os competidores mantendo os BR primeiro e ordenar por pontuação
         const sortedCompetitors = event.competitors.sort((a, b) => {
           // Ordenar por pontuação em ordem decrescente
-          const scoreA = parseFloat(a.results.mark) || 0;
-          const scoreB = parseFloat(b.results.mark) || 0;
-          return scoreB - scoreA;
+            const scoreA = parseFloat(a.results.mark) || 0;
+            const scoreB = parseFloat(b.results.mark) || 0;
+            return scoreB - scoreA;
         });
 
         // Obter os detalhes do placar
