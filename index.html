@@ -326,14 +326,15 @@
       var AdiadoCount = 0;
       var RemarcadoCount = 0;
       var CanceladoCount = 0;
+      const todayGMT3 = new Date(new Date().getTime() + (-3) * 60 * 60 * 1000);
 
       // Função para criar badges de data
       function createDateBadges() {
         const badgeContainer = document.getElementById("badgeContainer");
-        const today = new Date();
+        
         for (let i = 0; i < 5; i++) {
-          const badgeDate = new Date(today);
-          badgeDate.setDate(today.getDate() + i);
+          const badgeDate = new Date(todayGMT3);
+          badgeDate.setDate(todayGMT3.getDate() + i);
           const badge = document.createElement("div");
           badge.className = `badge ` + (i == 0 ? "badge-active" : "");
           badge.id = `badge-${i}`;
@@ -577,13 +578,14 @@
       }
 
       // Cria os badges de data e carrega os eventos do primeiro dia
+      
       createDateBadges();
       fetchUpdates();
-      fetchEvents(new Date().toISOString().split("T")[0], 0);
+      fetchEvents(todayGMT3.toISOString().split("T")[0], 0);
 
       setInterval(() => {
         fetchUpdates();
-        fetchEvents(new Date().toISOString().split("T")[0], 0);
+        fetchEvents(todayGMT3.toISOString().split("T")[0], 0);
       }, 300000); // 5 minutos
     </script>
   </body>
