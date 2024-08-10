@@ -258,6 +258,67 @@
         font-weight: bold;
         margin-left: 3px;
       }
+
+      h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .medal-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .medal-table th,
+        .medal-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .medal-table th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .country-name {
+            text-align: left;
+            padding-left: 10px;
+        }
+
+        @media screen and (max-width: 600px) {
+            .medal-table thead {
+                display: none;
+            }
+
+            .medal-table,
+            .medal-table tbody,
+            .medal-table tr,
+            .medal-table td {
+                display: block;
+                width: 100%;
+            }
+
+            .medal-table tr {
+                margin-bottom: 15px;
+                border-bottom: 2px solid #ddd;
+            }
+
+            .medal-table td {
+                text-align: right;
+                padding-left: 50%;
+                position: relative;
+            }
+
+            .medal-table td:before {
+                content: attr(data-label);
+                position: absolute;
+                left: 10px;
+                text-align: left;
+                font-weight: bold;
+            }
+        }
     </style>
   </head>
   <body>
@@ -276,31 +337,78 @@
       />
     </div>
     <div class="container">
-      <div class="news-section" id="newsSection">
-        <div class="news-container" id="newsContainer"></div>
-      </div>
-      <div class="badge-container" id="badgeContainer"></div>
-      <div>
-        <span class="badge-legend live-legend"
-          >Ao Vivo <span class="count-legend" id="aovivocount">0</span></span
-        >
-        <span class="badge-legend upcoming-legend"
-          >Confirmado
-          <span class="count-legend" id="confirmadocount">0</span></span
-        >
-        <span class="badge-legend postponed-live"
-          >Adiado <span class="count-legend" id="adiadocount">0</span></span
-        >
-        <span class="badge-legend none-legend"
-          >Remarcado
-          <span class="count-legend" id="remarcadocount">0</span></span
-        >
-        <span class="badge-legend cancel-legend"
-          >Cancelado
-          <span class="count-legend" id="canceladocount">0</span></span
-        >
-      </div>
-      <div id="eventsContainer"></div>
+      <div id="eventsContainer">
+        <div class="no-data">
+          <table class="medal-table">
+            <thead>
+                <tr>
+                    <th>Posição</th>
+                    <th>País</th>
+                    <th>Ouro</th>
+                    <th>Prata</th>
+                    <th>Bronze</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td data-label="Posição">1</td>
+                    <td data-label="País" class="country-name">China</td>
+                    <td data-label="Ouro">39</td>
+                    <td data-label="Prata">27</td>
+                    <td data-label="Bronze">24</td>
+                    <td data-label="Total">90</td>
+                </tr>
+                <tr>
+                    <td data-label="Posição">2</td>
+                    <td data-label="País" class="country-name">Estados Unidos</td>
+                    <td data-label="Ouro">38</td>
+                    <td data-label="Prata">42</td>
+                    <td data-label="Bronze">42</td>
+                    <td data-label="Total">122</td>
+                </tr>
+                <tr>
+                    <td data-label="Posição">3</td>
+                    <td data-label="País" class="country-name">Austrália</td>
+                    <td data-label="Ouro">18</td>
+                    <td data-label="Prata">18</td>
+                    <td data-label="Bronze">14</td>
+                    <td data-label="Total">50</td>
+                </tr>
+                <tr>
+                    <td data-label="Posição">4</td>
+                    <td data-label="País" class="country-name">Japão</td>
+                    <td data-label="Ouro">18</td>
+                    <td data-label="Prata">12</td>
+                    <td data-label="Bronze">13</td>
+                    <td data-label="Total">43</td>
+                </tr>
+                <tr>
+                    <td data-label="Posição">5</td>
+                    <td data-label="País" class="country-name">França</td>
+                    <td data-label="Ouro">16</td>
+                    <td data-label="Prata">24</td>
+                    <td data-label="Bronze">22</td>
+                    <td data-label="Total">62</td>
+                </tr>
+                <tr>
+                    <td data-label="Posição">20</td>
+                    <td data-label="País" class="country-name">Brasil</td>
+                    <td data-label="Ouro">3</td>
+                    <td data-label="Prata">7</td>
+                    <td data-label="Bronze">10</td>
+                    <td data-label="Total">20</td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
+        <br>
+        <div class="no-data">
+          <h2>Olimpíadas Finalizada</h2><br>
+          <h5>Obrigado por acompanhar o Brasil com a gente.<br><b>Los Angeles 2028</b> é logo ali.</h5><br>
+          <img width="100%" src="https://img.olympics.com/images/image/private/t_s_16_9_g_auto/t_s_w960/f_auto/primary/bwzduucq8jm7s9l0rgjo">
+        </div>
+  </div>
     </div>
     <div class="top-menu">
       <img
@@ -320,277 +428,6 @@
         alt="Símbolo do Time Brasil"
       />
     </div>
-    <script>
-      var AoVivoCount = 0;
-      var ConfirmadoCount = 0;
-      var AdiadoCount = 0;
-      var RemarcadoCount = 0;
-      var CanceladoCount = 0;
-
-      // Função para criar badges de data
-      function createDateBadges() {
-        const badgeContainer = document.getElementById("badgeContainer");
-        const today = new Date();
-        
-        for (let i = 0; i < 5; i++) {
-          const badgeDate = new Date(today);
-          badgeDate.setDate(today.getDate() + i);
-          const badge = document.createElement("div");
-          badge.className = `badge ` + (i == 0 ? "badge-active" : "");
-          badge.id = `badge-${i}`;
-          badge.textContent = badgeDate.toLocaleDateString("pt-BR");
-          badge.dataset.date = badgeDate.toISOString().split("T")[0];
-          badge.addEventListener("click", () =>
-            fetchEvents(badge.dataset.date, i)
-          );
-          badgeContainer.appendChild(badge);
-        }
-      }
-
-      function clearCountLegends() {
-        AoVivoCount = 0;
-        ConfirmadoCount = 0;
-        AdiadoCount = 0;
-        RemarcadoCount = 0;
-        CanceladoCount = 0;
-      }
-
-      // Função para buscar eventos da API day/yyyy-mm-dd
-      async function fetchEvents(date, indexid) {
-        clearCountLegends();
-        setActiveDate(indexid);
-        const url =
-          `https://sph-s-api.olympics.com/summer/schedules/api/POR/schedule/day/` +
-          date;
-        const response = await fetch(url);
-        const data = await response.json();
-        const statusOrder = [
-          "Em andamento",
-          "Em preparação",
-          "Atrasado",
-          "Programado",
-          "Remarcado",
-          "Adiado",
-          "Cancelado",
-        ];
-
-        const brazilEvents = data.units.filter(
-          (event) =>
-            event.competitors &&
-            event.status != "FINISHED" &&
-            event.competitors.some((competitor) => competitor.noc === "BRA")
-        );
-        const sortedEvents = brazilEvents.sort((a, b) => {
-          const statusA = a.statusDescription || "";
-          const statusB = b.statusDescription || "";
-          const indexA = statusOrder.indexOf(statusA);
-          const indexB = statusOrder.indexOf(statusB);
-
-          if (indexA === -1 && indexB === -1) return 0; // Both statuses are not in the order list
-          if (indexA === -1) return 1; // Status A is not in the order list
-          if (indexB === -1) return -1; // Status B is not in the order list
-          return indexA - indexB;
-        });
-
-        displayEvents(sortedEvents, date);
-      }
-
-      // Função para exibir eventos filtrados
-      function displayEvents(events, date) {
-        const eventsContainer = document.getElementById("eventsContainer");
-        eventsContainer.innerHTML = "";
-        //const filteredEvents = events.filter(event => event.startDate.startsWith(date));
-        if (events.length > 0) {
-          events.forEach((event) => {
-            const card = document.createElement("div");
-            card.className = `card ` + getTimingClass(event);
-            card.innerHTML = `
-                    <h2>${event.disciplineName} - ${event.phaseName}</h2>
-                    <p class="date-time">Data e Hora: ${adjustDate(event)}</p>
-                    <p>Local: ${event.locationDescription}</p>
-                    <p class="score-live">${
-                      event.statusDescription == "Em andamento"
-                        ? getLiveScore(event)
-                        : event.statusDescription
-                    }</p>
-                    <p class="atleta">${getAtleta(event)}</p>
-                `;
-            eventsContainer.appendChild(card);
-          });
-          document.getElementById("aovivocount").innerHTML = AoVivoCount;
-          document.getElementById("confirmadocount").innerHTML =
-            ConfirmadoCount;
-          document.getElementById("adiadocount").innerHTML = AdiadoCount;
-          document.getElementById("remarcadocount").innerHTML = RemarcadoCount;
-          document.getElementById("canceladocount").innerHTML = CanceladoCount;
-        } else {
-          const card = document.createElement("div");
-          card.className = `no-data`;
-          card.innerHTML = `
-                    <h2>Dia Olimpíco finalizado</h2><br>
-                    <img width="100%" src="https://www.cnnbrasil.com.br/wp-content/uploads/sites/12/2024/07/GettyImages-2163817723-e1722017380437.jpg?w=1220&h=674&crop=1&quality=50" />
-                `;
-          eventsContainer.appendChild(card);
-        }
-      }
-
-      function setActiveDate(indexid) {
-        for (let i = 0; i < 5; i++) {
-          const badgeDateElem = document.getElementById("badge-" + i);
-          badgeDateElem.classList.remove("badge-active");
-        }
-        document
-          .getElementById("badge-" + indexid)
-          .classList.add("badge-active");
-      }
-
-      function getTimingClass(event) {
-        switch (event.statusDescription) {
-          case "Programado":
-            ConfirmadoCount++;
-            return "card-confirmed";
-            break;
-          case "Adiado":
-            AdiadoCount++;
-            return "card-postponed";
-            break;
-          case "Em andamento":
-            AoVivoCount++;
-            return "card-live";
-            break;
-          case "Remarcado":
-            RemarcadoCount++;
-            return "card-none";
-            break;
-          case "Cancelado":
-            CanceladoCount++;
-            return "card-cancel";
-            break;
-          default:
-            return "card-confirmed";
-            break;
-        }
-      }
-
-      // Função para obter o nome do atleta brasileiro
-      function getAtleta(event) {
-        const brazilianCompetitors = event.competitors.filter(
-          (comp) => comp.noc === "BRA"
-        );
-        const isTeamEvent = event.competitors.length > 2;
-
-        if (isTeamEvent) {
-          const competitorsNames = brazilianCompetitors
-            .map((comp) => comp.name)
-            .join("<br>");
-          return competitorsNames;
-        } else {
-          const opponent = event.competitors.find((comp) => comp.noc !== "BRA");
-          if (opponent) {
-            return `<b>${brazilianCompetitors[0].name}</b> x ${opponent.name} <span class="noc-atleta">${opponent.noc ? opponent.noc : ' A Definir '}</span>`;
-          } else {
-            return "Ainda não definido";
-          }
-        }
-      }
-
-      function adjustDate(event) {
-        const date = event.startDate;
-        const eventStartDate = new Date(date);
-
-        const adjustedDate = new Date(eventStartDate.getTime());
-
-        const day = String(adjustedDate.getDate()).padStart(2, "0");
-        const month = String(adjustedDate.getMonth() + 1).padStart(2, "0"); // Month is zero-based
-        const year = adjustedDate.getFullYear();
-        const hours = String(adjustedDate.getHours()).padStart(2, "0");
-        const minutes = String(adjustedDate.getMinutes()).padStart(2, "0");
-
-        const timing =
-          event.statusDescription == "Em andamento"
-            ? "Agora"
-            : `${hours}:${minutes}`;
-
-        return `${day}/${month}/${year} - ${timing}`;
-      }
-
-      async function fetchUpdates() {
-        const url =
-          "https://sph-i-api.olympics.com/summer/info/api/POR/infobox/schedule";
-        try {
-          const response = await fetch(url);
-          const data = await response.json();
-          const missedUpdates = data.infoBoxes.find(
-            (box) => box.infoBoxType === "In case you missed"
-          );
-
-          if (missedUpdates && missedUpdates.content) {
-            displayUpdates(missedUpdates.content[0]);
-          } else {
-            console.error('No updates found for "In case you missed".');
-          }
-        } catch (error) {
-          console.error("Error fetching updates:", error);
-        }
-      }
-
-      function displayUpdates(update) {
-        const newsContainer = document.getElementById("newsContainer");
-        newsContainer.innerHTML = ""; // Clear previous updates
-
-        const newsCard = document.createElement("div");
-        newsCard.className = "news-card";
-        newsCard.innerHTML = `
-                    <a href="${update.url}" target="_blank"><h3>${update.title}</h3></a>
-                `;
-        newsContainer.appendChild(newsCard);
-      }
-
-      function getLiveScore(event) {
-        if (!event.competitors) {
-          return "Sem informações de placar ao vivo";
-        }
-
-        if (!event.competitors[0].results) {
-          return "Sem informações de placar ao vivo";
-        }
-
-        // Organizar os competidores mantendo os BR primeiro e ordenar por pontuação
-        const sortedCompetitors = event.competitors.sort((a, b) => {
-          // Ordenar por pontuação em ordem decrescente
-            const scoreA = parseFloat(a.results.mark) || 0;
-            const scoreB = parseFloat(b.results.mark) || 0;
-            return scoreB - scoreA;
-        });
-
-        // Obter os detalhes do placar
-        let scoreDetails = `PLACAR AO VIVO<br><br>`;
-        sortedCompetitors.forEach((competitor) => {
-          const { name, results, noc } = competitor;
-          const { mark } = results;
-
-          if (noc === "BRA") {
-            scoreDetails += `<span style="color: green;">${name}: ${
-              mark === "" ? "0" : mark
-            }</span><br>`;
-          } else {
-            scoreDetails += `${name}: ${mark === "" ? "0" : mark}<br>`;
-          }
-        });
-
-        return scoreDetails.trim();
-      }
-
-      // Cria os badges de data e carrega os eventos do primeiro dia
-      
-      createDateBadges();
-      fetchUpdates();
-      fetchEvents(new Date().toISOString().split("T")[0], 0);
-
-      setInterval(() => {
-        fetchUpdates();
-        fetchEvents(new Date().toISOString().split("T")[0], 0);
-      }, 300000); // 5 minutos
     </script>
   </body>
 </html>
