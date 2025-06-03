@@ -3,404 +3,49 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Paris 2024 - Time Brasil</title>
+    <title>Até logo - Paris 2024</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/fontawesome.min.css"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap"
       rel="stylesheet"
     />
     <style>
       body {
-        background-color: #f0f0f0;
-        font-family: Arial, sans-serif;
-        color: #333;
-        margin: 0;
+        font-family: 'Inter', sans-serif;
       }
-      #eventsContainer {
-        margin-top: 18px;
-        min-height: 100vh;
-      }
-      .container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 20px;
-      }
-      .card {
-        background-color: #fff;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        margin-bottom: 20px;
-        padding: 20px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      }
-
-      .card-confirmed {
-        border-left: 5px solid #009c3b; /* Verde */
-      }
-      .card-live {
-        border-left: 10px solid #002a9c; /* Verde */
-      }
-      .card-postponed {
-        border-left: 5px solid orange;
-      }
-      .card-none {
-        border-left: 5px solid rgb(90, 90, 90);
-      }
-      .card-cancel {
-        border-left: 5px solid rgb(161, 38, 38);
-      }
-      .card h2 {
-        margin: 0;
-        font-size: 24px;
-        color: #ffcc29; /* Amarelo */
-        text-align: center;
-      }
-      .card p {
-        margin: 10px 0;
-        font-size: 16px;
-        text-align: center;
-      }
-      .card img {
-        max-width: 100%;
-        height: auto;
-        margin-bottom: 15px;
-      }
-      .date-time {
-        color: #002776; /* Azul */
-        font-weight: bold;
-      }
-      .badge-container {
-        display: flex;
-        gap: 10px;
-        margin-bottom: 20px;
-      }
-      .badge {
-        background-color: #009c3b;
-        color: #fff;
-        padding: 10px 20px;
-        border-radius: 5px;
-        cursor: pointer;
-        border: solid 0.1rem #ffcc29;
-      }
-      .badge:hover {
-        background-color: #007a2b;
-      }
-      .badge-active {
-        background-color: #1c3b27;
-        color: #009c3b;
-      }
-      .badge-active:hover {
-        background-color: #1c3b27;
-        color: #009c3b;
-      }
-      .top-menu {
-        background-color: #009c3b; /* Verde Brasil */
-        color: #ffcc29; /* Amarelo Brasil */
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 20px;
-      }
-      .top-menu img {
-        height: 50px;
-      }
-      .top-menu .menu-items {
-        display: flex;
-        gap: 20px;
-      }
-      .top-menu .menu-items a {
-        color: #ffcc29;
-        text-decoration: none;
-        font-weight: bold;
-        font-size: 18px;
-      }
-      .top-menu .menu-items a:hover {
-        color: #002776; /* Azul Brasil */
-      }
-      .badge-legend {
-        display: inline-flex;
-        align-items: center;
-        padding: 5px 10px;
-        margin: 5px;
-        border-radius: 12px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        background-color: white;
-      }
-      .badge-legend::before {
-        content: "";
-        display: inline-block;
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        margin-right: 10px;
-      }
-      .live-legend::before {
-        background-color: #002a9c;
-      }
-      .upcoming-legend::before {
-        background-color: green;
-      }
-      .postponed-live::before {
-        background-color: orange;
-      }
-      .none-legend:before {
-        background-color: rgb(90, 90, 90);
-      }
-      .cancel-legend:before {
-        background-color: rgb(161, 38, 38);
-      }
-      .menu-phrase-cell {
-        display: none;
-      }
-      .menu-phrase-footer {
-        display: block;
-        text-align: center;
-      }
-      .news-section {
-        color: #ffcc29; /* Amarelo Brasil */
-        padding: 10px;
-        position: relative;
-      }
-      .news-section h2 {
-        text-align: center;
-        margin-bottom: 10px;
-      }
-      .news-container {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        padding-bottom: 8px;
-      }
-      .news-card {
-        background-color: #ffcc29; /* Amarelo Brasil */
-        color: #002776; /* Azul Brasil */
-        padding: 10px;
-        border-radius: 5px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        padding-bottom: 0.5px;
-        padding-top: 0.5px;
-        text-align: center;
-      }
-      .news-card a {
-        color: #002776;
-        text-decoration: none;
-        font-weight: bold;
-      }
-      .news-card a:hover {
-        text-decoration: underline;
-      }
-      .menu-phrase-footer a {
-        color: #002776 !important;
-      }
-      .menu-phrase-footer a:hover {
-        color: #f7fcd1 !important;
-      }
-      @keyframes ticker {
-        0% {
-          transform: translateX(100%);
-        }
-        100% {
-          transform: translateX(-100%);
-        }
-      }
-      @media (max-width: 600px) {
-        .badge-container {
-          overflow: scroll;
-        }
-        .menu-phrase {
-          display: none;
-        }
-        .menu-phrase-cell {
-          display: block;
-        }
-        .atleta b {
-          width: 100%;
-          display: flex;
-        }
-        .menu-phrase-footer a {
-          width: 100%;
-          display: flex;
-        }
-      }
-      span.noc-atleta {
-        border: solid 0.1rem;
-        padding: 0.1rem;
-      }
-      .score-live {
-        border: solid 0.1rem;
-        padding: 0.3rem;
-        border-radius: 12px;
-        padding-right: 20px;
-        padding-left: 20px;
-      }
-      .atleta b {
-        color: green;
-      }
-      .no-data {
-        background-color: #fff;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        padding: 10px;
-        text-align: center;
-      }
-      .count-legend {
-        background-color: gray;
-        color: white;
-        padding: 0px;
-        border-radius: 50%;
-        display: inline-block;
-        text-align: center;
-        min-width: 20px;
-        min-height: 20px;
-        line-height: 20px;
-        font-size: 14px;
-        font-weight: bold;
-        margin-left: 3px;
-      }
-
-      h1 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .medal-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-
-        .medal-table th,
-        .medal-table td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: center;
-        }
-
-        .medal-table th {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        .country-name {
-            text-align: left;
-            padding-left: 10px;
-        }
-
-        @media screen and (max-width: 600px) {
-            .total{
-              display: none;
-            }
-        }
     </style>
   </head>
-  <body>
-    <div class="top-menu">
-      <img
-        src="https://upload.wikimedia.org/wikipedia/pt/thumb/d/d1/2024_Summer_Olympics_logo.svg/250px-2024_Summer_Olympics_logo.svg.png"
-        alt="Símbolo das Olimpíadas de Paris 2024"
-      />
-      <div class="menu-items">
-        <p class="menu-phrase">Acompanhe o Brasil nas Olimpíadas Paris 2024</p>
-        <p class="menu-phrase-cell">Paris 2024 - Brasil</p>
-      </div>
-      <img
-        src="https://upload.wikimedia.org/wikipedia/commons/3/34/Brasil_Olympic_Committee_crest.svg"
-        alt="Símbolo do Time Brasil"
-      />
-    </div>
-    <div class="container">
-      <div id="eventsContainer">
-        <div class="no-data">
-          <table class="medal-table">
-            <thead>
-                <tr>
-                    <th>Posição</th>
-                    <th>País</th>
-                    <th>Ouro</th>
-                    <th>Prata</th>
-                    <th>Bronze</th>
-                    <th class="total">Total</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td data-label="Posição">1</td>
-                    <td data-label="País" class="country-name">EUA</td>
-                    <td data-label="Ouro">40</td>
-                    <td data-label="Prata">44</td>
-                    <td data-label="Bronze">42</td>
-                    <td data-label="Total" class="total">126</td>
-                </tr>
-                <tr>
-                  <td data-label="Posição">2</td>
-                  <td data-label="País" class="country-name">China</td>
-                  <td data-label="Ouro">40</td>
-                  <td data-label="Prata">27</td>
-                  <td data-label="Bronze">24</td>
-                  <td data-label="Total" class="total">91</td>
-                </tr>
-                <tr>
-                  <td data-label="Posição">3</td>
-                  <td data-label="País" class="country-name">Japão</td>
-                  <td data-label="Ouro">20</td>
-                  <td data-label="Prata">12</td>
-                  <td data-label="Bronze">13</td>
-                  <td data-label="Total" class="total">45</td>
-                </tr>
-                <tr>
-                    <td data-label="Posição">4</td>
-                    <td data-label="País" class="country-name">Austrália</td>
-                    <td data-label="Ouro">18</td>
-                    <td data-label="Prata">19</td>
-                    <td data-label="Bronze">16</td>
-                    <td data-label="Total" class="total">50</td>
-                </tr>
-                <tr>
-                    <td data-label="Posição">5</td>
-                    <td data-label="País" class="country-name">França</td>
-                    <td data-label="Ouro">16</td>
-                    <td data-label="Prata">26</td>
-                    <td data-label="Bronze">22</td>
-                    <td data-label="Total" class="total">64</td>
-                </tr>
-                <tr>
-                    <td data-label="Posição">20</td>
-                    <td data-label="País" class="country-name">Brasil</td>
-                    <td data-label="Ouro">3</td>
-                    <td data-label="Prata">7</td>
-                    <td data-label="Bronze">10</td>
-                    <td data-label="Total" class="total">20</td>
-                </tr>
-            </tbody>
-        </table>
-        </div>
-        <br>
-        <div class="no-data">
-          <h2>Olimpíadas Finalizada</h2><br>
-          <h5>Obrigado por acompanhar o Brasil com a gente.<br><b>Los Angeles 2028</b> é logo ali.</h5><br>
-          <img width="100%" src="https://img.olympics.com/images/image/private/t_s_16_9_g_auto/t_s_w960/f_auto/primary/bwzduucq8jm7s9l0rgjo">
-        </div>
-  </div>
-    </div>
-    <div class="top-menu">
-      <img
-        src="https://upload.wikimedia.org/wikipedia/pt/thumb/d/d1/2024_Summer_Olympics_logo.svg/250px-2024_Summer_Olympics_logo.svg.png"
-        alt="Símbolo das Olimpíadas de Paris 2024"
-      />
-      <div class="menu-items">
-        <p class="menu-phrase-footer">
-          Desenvolvido por
-          <a href="https://github.com/Gabr13dev/" target="_blank"
-            >Gabriel de Almeida</a
-          >
+  <body class="bg-gray-900 text-white">
+    <div
+      class="relative w-full min-h-screen flex items-center justify-center bg-cover bg-center"
+      style="background-image: url('https://images.unsplash.com/photo-1604275688559-31c2b50b6b75?ixlib=rb-4.0.3&auto=format&fit=crop&w=2100&q=80');"
+    >
+      <div class="absolute inset-0 bg-black bg-opacity-60"></div>
+
+      <div class="relative z-10 text-center px-6">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-yellow-400 mb-4">
+          Obrigado por acompanhar Paris 2024!
+        </h1>
+        <p class="text-lg md:text-xl max-w-2xl mx-auto text-gray-200 mb-6">
+          Este projeto nasceu simples, com o coração de um brasileiro apaixonado por esportes.
+          Juntos vibramos, torcemos e celebramos cada conquista do Time Brasil 🇧🇷.
         </p>
+        <p class="text-xl font-semibold text-white mb-8">
+          Nos vemos em <span class="text-blue-400">Los Angeles 2028 🇺🇸</span>
+        </p>
+        <a
+          href="https://github.com/Gabr13dev"
+          target="_blank"
+          class="inline-block bg-yellow-400 text-gray-900 font-semibold px-6 py-3 rounded-full hover:bg-yellow-300 transition"
+        >
+          Ver projeto no GitHub
+        </a>
       </div>
-      <img
-        src="https://upload.wikimedia.org/wikipedia/commons/3/34/Brasil_Olympic_Committee_crest.svg"
-        alt="Símbolo do Time Brasil"
-      />
     </div>
-    </script>
+
+    <footer class="text-center py-6 bg-gray-800 text-sm text-gray-400">
+      Desenvolvido por <a href="https://github.com/Gabr13dev" class="underline hover:text-white">Gabriel de Almeida</a> • Paris 2024 ©
+    </footer>
   </body>
 </html>
